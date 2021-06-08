@@ -27,8 +27,8 @@ class ViewController: UIViewController {
         collectionView.backgroundColor = .red
         
         collectionView.cellSize = CGSize(width: 200, height: 210)
-        collectionView.items = images
-        collectionView.reloadData()
+        collectionView.itemsConst = images
+//        collectionView.reloadData()
 //        collectionView.delegate = self
 //        collectionView.dataSource = self
 //        collectionView = InfiniteCollectionView(cellSize: CGSize(width: 200, height: 110), dataSource: images)
@@ -67,8 +67,9 @@ class ViewController: UIViewController {
 
 class CVCell: UICollectionViewCell {
     var avatar: UIImageView = UIImageView()
+    let label = UILabel()
     
-    func update(image: UIImage) {
+    func update(image: UIImage, index: Int) {
         avatar.clipsToBounds = true
         avatar.image = image
         
@@ -81,13 +82,44 @@ class CVCell: UICollectionViewCell {
         let widthConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: contentView.bounds.width - 40)
         let heightConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 160)
         contentView.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        label.textColor = .white
+        label.text = "\(index)"
+        setupLabelConstaraints()
+    }
+    
+    private func setupLabelConstaraints() {
+        contentView.addSubview(label)
+        
+        label.translatesAutoresizingMaskIntoConstraints = false
+        
+        let horizontalConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+        let verticalConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+        let widthConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: contentView.bounds.width - 40)
+        let heightConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 160)
+        contentView.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
     }
 }
 
 
 class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    private var didEndDisplayingIndex: Int = 0
+    private var willDisplayIndex: Int = 0
+    
+    private var isScrollingFromLeftTopRight: Bool {
+        didEndDisplayingIndex < willDisplayIndex
+    }
+    
     var cellSize: CGSize = .zero
-    var items: [UIImage] = []
+    
+    var itemsConst: [UIImage] = [] {
+        didSet {
+            items = itemsConst
+            reloadData()
+        }
+    }
+    
+    private var items: [UIImage] = []
     
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -116,7 +148,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CVCell", for: indexPath) as! CVCell
-        cell.update(image: items[indexPath.row])
+        cell.update(image: items[indexPath.row], index: indexPath.row)
         cell.backgroundColor = .cyan
         return cell
     }
@@ -124,15 +156,39 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         cellSize
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didEndDisplaying cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+//        print("didend = \(indexPath.row)")
+        didEndDisplayingIndex = indexPath.row
+    }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-        print(indexPath.row)
+//        print(indexPath.row)
         guard !items.isEmpty else { return }
+        willDisplayIndex = indexPath.row
         if indexPath.row == items.count - 1 {
             items += [UIImage(named: "0")!, UIImage(named: "1")!, UIImage(named: "2")!]
             self.performBatchUpdates {
+//                print(items.count - itemsConst.count > itemsConst.count)
+//                if items.count - itemsConst.count > itemsConst.count {
+//                    print("more")
+//                    for index in 0...itemsConst.count - 1 {
+//                        self.items.remove(at: index)
+//                        self.deleteItems(at: [IndexPath(row: index, section: 0)])
+//                    }
+//                }
                 self.insertItems(at: [IndexPath(row: items.count - 1, section: 0), IndexPath(row: items.count - 2, section: 0), IndexPath(row: items.count - 3, section: 0)])
             }
+        }
+    }
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        // visibleCells.first
+//        print("scrollViewDidEndDecelerating", indexPathsForVisibleItems.first?.row)
+        
+        print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight)")
+        if items.count > itemsConst.count {
+            
         }
     }
 }

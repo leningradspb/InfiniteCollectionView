@@ -189,6 +189,17 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight)")
         if items.count > itemsConst.count {
             
+            if !isScrollingFromLeftTopRight && willDisplayIndex == 0 {
+                var indexPaths:[IndexPath] = []
+                for index in itemsConst.count...items.count - 1 {
+                    indexPaths.append(IndexPath(row: index, section: 0))
+                }
+                items = itemsConst
+                self.performBatchUpdates {
+                    self.deleteItems(at: indexPaths)
+                }
+            }
+            
         }
     }
 }

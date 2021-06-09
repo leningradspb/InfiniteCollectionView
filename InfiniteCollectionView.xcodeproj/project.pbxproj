@@ -3,19 +3,23 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		269C4F39267113D6008C39BE /* PagingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269C4F38267113D6008C39BE /* PagingView.swift */; };
 		26D040C2266E8354008920DF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D040C1266E8354008920DF /* AppDelegate.swift */; };
 		26D040C4266E8354008920DF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D040C3266E8354008920DF /* SceneDelegate.swift */; };
 		26D040C6266E8354008920DF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26D040C5266E8354008920DF /* ViewController.swift */; };
 		26D040C9266E8354008920DF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26D040C7266E8354008920DF /* Main.storyboard */; };
 		26D040CB266E8355008920DF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 26D040CA266E8355008920DF /* Assets.xcassets */; };
 		26D040CE266E8355008920DF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 26D040CC266E8355008920DF /* LaunchScreen.storyboard */; };
+		50F1744E48A173F30B899FE0 /* Pods_InfiniteCollectionView.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 88140579100BF6752102A3A9 /* Pods_InfiniteCollectionView.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		004CB5CF8E1614D02FD940B7 /* Pods-InfiniteCollectionView.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfiniteCollectionView.release.xcconfig"; path = "Target Support Files/Pods-InfiniteCollectionView/Pods-InfiniteCollectionView.release.xcconfig"; sourceTree = "<group>"; };
+		269C4F38267113D6008C39BE /* PagingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingView.swift; sourceTree = "<group>"; };
 		26D040BE266E8354008920DF /* InfiniteCollectionView.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = InfiniteCollectionView.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		26D040C1266E8354008920DF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		26D040C3266E8354008920DF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -24,6 +28,8 @@
 		26D040CA266E8355008920DF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		26D040CD266E8355008920DF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		26D040CF266E8355008920DF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		88140579100BF6752102A3A9 /* Pods_InfiniteCollectionView.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_InfiniteCollectionView.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		A41B96D04FB2B6AAA88FD62D /* Pods-InfiniteCollectionView.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-InfiniteCollectionView.debug.xcconfig"; path = "Target Support Files/Pods-InfiniteCollectionView/Pods-InfiniteCollectionView.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -31,6 +37,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				50F1744E48A173F30B899FE0 /* Pods_InfiniteCollectionView.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -42,6 +49,8 @@
 			children = (
 				26D040C0266E8354008920DF /* InfiniteCollectionView */,
 				26D040BF266E8354008920DF /* Products */,
+				DDC52149FA213F8D1EF94310 /* Pods */,
+				2A21BAA014DC8D23C2CD8632 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -63,8 +72,26 @@
 				26D040CA266E8355008920DF /* Assets.xcassets */,
 				26D040CC266E8355008920DF /* LaunchScreen.storyboard */,
 				26D040CF266E8355008920DF /* Info.plist */,
+				269C4F38267113D6008C39BE /* PagingView.swift */,
 			);
 			path = InfiniteCollectionView;
+			sourceTree = "<group>";
+		};
+		2A21BAA014DC8D23C2CD8632 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				88140579100BF6752102A3A9 /* Pods_InfiniteCollectionView.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DDC52149FA213F8D1EF94310 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				A41B96D04FB2B6AAA88FD62D /* Pods-InfiniteCollectionView.debug.xcconfig */,
+				004CB5CF8E1614D02FD940B7 /* Pods-InfiniteCollectionView.release.xcconfig */,
+			);
+			path = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -74,9 +101,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 26D040D2266E8355008920DF /* Build configuration list for PBXNativeTarget "InfiniteCollectionView" */;
 			buildPhases = (
+				43112018B5EBC59E2A3F1092 /* [CP] Check Pods Manifest.lock */,
 				26D040BA266E8354008920DF /* Sources */,
 				26D040BB266E8354008920DF /* Frameworks */,
 				26D040BC266E8354008920DF /* Resources */,
+				B5278DEE5E0FB6F44AFFC836 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -132,11 +161,54 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		43112018B5EBC59E2A3F1092 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-InfiniteCollectionView-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B5278DEE5E0FB6F44AFFC836 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InfiniteCollectionView/Pods-InfiniteCollectionView-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-InfiniteCollectionView/Pods-InfiniteCollectionView-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-InfiniteCollectionView/Pods-InfiniteCollectionView-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		26D040BA266E8354008920DF /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				269C4F39267113D6008C39BE /* PagingView.swift in Sources */,
 				26D040C6266E8354008920DF /* ViewController.swift in Sources */,
 				26D040C2266E8354008920DF /* AppDelegate.swift in Sources */,
 				26D040C4266E8354008920DF /* SceneDelegate.swift in Sources */,
@@ -283,6 +355,7 @@
 		};
 		26D040D3266E8355008920DF /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A41B96D04FB2B6AAA88FD62D /* Pods-InfiniteCollectionView.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -303,6 +376,7 @@
 		};
 		26D040D4266E8355008920DF /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 004CB5CF8E1614D02FD940B7 /* Pods-InfiniteCollectionView.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;

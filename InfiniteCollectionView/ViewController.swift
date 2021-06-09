@@ -24,7 +24,7 @@ class ViewController: UIViewController {
         let widthConstraint = NSLayoutConstraint(item: collectionView, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: view.bounds.width)
         let heightConstraint = NSLayoutConstraint(item: collectionView, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 250)
         view.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
-        collectionView.backgroundColor = .red
+        collectionView.backgroundColor = .clear
         
         collectionView.cellSize = CGSize(width: 200, height: 210)
         collectionView.items = images
@@ -103,6 +103,7 @@ class CVCell: UICollectionViewCell {
 
 
 class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    private var pagingView: PagingView!
     private var didEndDisplayingIndex: Int = 0
     private var willDisplayIndex: Int = 0
     
@@ -111,8 +112,55 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     }
     
     var cellSize: CGSize = .zero
+//    {
+//        didSet {
+//            pagingView.heightAnchor.constraint(equalToConstant: cellSize.height).isActive = true
+//        }
+//    }
     
     private var count: Int = 0
+    
+    private var anchors: [CGPoint] {
+        let cellInfos = Static.makeCellInfos()
+        return (0..<cellInfos.count).map {
+            let offsetX = cellInfos.prefix($0).reduce(0, { $0 + $1.width})
+            return CGPoint(x: offsetX, y: 0)
+        }
+    }
+    
+    private struct Static {
+        
+        static let minCellWidth: CGFloat = 64
+        
+        static let maxCellWidth: CGFloat = 256
+        
+        static let cellHeight: CGFloat = 56
+        
+        static let cellSpacing: CGFloat = 8
+        
+        static let collectionHeight = cellHeight + 64
+        
+        static let cellReuseIdentifier = "CVCell"
+        
+        static let cellColors: [UInt] = [0xB11F38, 0xE77A39, 0xEBD524, 0x4AA77A, 0x685B87, 0xA24C57]
+        
+        static func makeCellInfos() -> [CGSize] {
+            return (cellColors + cellColors + cellColors).map {
+                let text = String(format: "%06X", $0)
+                let size = CGSize(width: round(.random(in: minCellWidth...maxCellWidth)), height: cellHeight)
+                return size
+            }
+        }
+        
+        static func makeLayout() -> UICollectionViewFlowLayout {
+            let layout = UICollectionViewFlowLayout()
+            layout.minimumInteritemSpacing = cellSpacing
+            layout.sectionInset = UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: cellSpacing, right: cellSpacing)
+            layout.scrollDirection = .horizontal
+            return layout
+        }
+
+    }
     
     var items: [UIImage] = [] {
         didSet {
@@ -129,6 +177,8 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         delegate = self
         dataSource = self
         register(CVCell.self, forCellWithReuseIdentifier: "CVCell")
+        pagingView = PagingView(contentView: self)
+        setupLayout()
 //        contentInsetAdjustmentBehavior = .never
     }
     
@@ -138,6 +188,25 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    private func setupLayout() {
+        pagingView.backgroundColor = .green
+        pagingView.translatesAutoresizingMaskIntoConstraints = false
+        pagingView.heightAnchor.constraint(equalToConstant: 210).isActive = true
+        pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+        pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+        pagingView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+        pagingView.anchors = anchors
+        
+        print(pagingView.decelerationRate, pagingView.springBounciness, pagingView.springSpeed)
+//        pagingView.translatesAutoresizingMaskIntoConstraints = false
+//        pagingView.heightAnchor.constraint(equalToConstant: cellSize.height).isActive = true
+//        pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
+//        pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
+//        pagingView.topAnchor.constraint(equalTo: topAnchor).isActive = true
     }
     
 
@@ -187,6 +256,14 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //            count += items.count
 //            collectionView.reloadData()
 //        }
+    }
+    
+    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+        pagingView.contentViewWillEndDragging(scrollView, withVelocity: velocity, targetContentOffset: targetContentOffset)
+    }
+
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        pagingView.contentViewWillBeginDragging(scrollView)
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {

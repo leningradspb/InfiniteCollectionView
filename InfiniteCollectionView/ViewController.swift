@@ -119,6 +119,8 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         }
     }
     
+    private var count: Int = 9
+    
     private var items: [UIImage] = []
     
     init() {
@@ -143,12 +145,14 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
 //        print(items.count)
-        return items.count
+        return count
     }
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+//        print(indexPath.row % items.count)
+        let itemToShow = items[indexPath.row % items.count]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CVCell", for: indexPath) as! CVCell
-        cell.update(image: items[indexPath.row], index: indexPath.row)
+        cell.update(image: itemToShow, index: indexPath.row)
         cell.backgroundColor = .cyan
         return cell
     }
@@ -174,38 +178,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //        print("scrollViewDidEndDecelerating", indexPathsForVisibleItems.first?.row)
         
         print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight)")
-        if items.count > itemsConst.count {
-            
-            if !isScrollingFromLeftTopRight && willDisplayIndex == 0 {
-                var indexPaths:[IndexPath] = []
-                for index in itemsConst.count...items.count - 1 {
-                    indexPaths.append(IndexPath(row: index, section: 0))
-                }
-                items = itemsConst
-                self.performBatchUpdates { [weak self] in
-                    self?.deleteItems(at: indexPaths)
-                }
-                return
-            }
-            
-            if isScrollingFromLeftTopRight {
-                
-//                var indexPaths:[IndexPath] = []
-//                for index in 0...(items.count - itemsConst.count) - 2 {
-//                    indexPaths.append(IndexPath(row: index, section: 0))
-//                    print("index = \(index), items = \(items.count)")
-//                    items.remove(at: index)
-//                }
-////                items = itemsConst
-//                self.performBatchUpdates { [weak self] in
-//                    self?.deleteItems(at: indexPaths)
-//                }
-                
-            } else {
-                
-            }
-            
-        }
+  
     }
     
     
@@ -215,7 +188,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
-        if index == items.count - 1 {
+       /* if index == items.count - 1 {
             items += [UIImage(named: "0")!, UIImage(named: "1")!, UIImage(named: "2")!]
             self.performBatchUpdates { [weak self] in
 //                print(items.count - itemsConst.count > itemsConst.count)
@@ -228,6 +201,6 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //                }
                 self?.insertItems(at: [IndexPath(row: items.count - 1, section: 0), IndexPath(row: items.count - 2, section: 0), IndexPath(row: items.count - 3, section: 0)])
             }
-        }
+        }*/
     }
 }

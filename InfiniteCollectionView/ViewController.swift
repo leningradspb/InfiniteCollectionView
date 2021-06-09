@@ -125,15 +125,21 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
             for _ in 0...count - 1 {
                 cellInfos.append(CGSize(width: cellSize.width, height: cellSize.height))
             }
-//            let cellInfos = Static.makeCellInfos()
-//            var anchors: [CGPoint] = []
-            (0..<cellInfos.count).map {
-                let offsetX = cellInfos.prefix($0).reduce(0, { $0 + $1.width + Static.cellSpacing})
+            
+            for value in 0...count - 1 {
+                let offsetX = cellInfos.prefix(value).reduce(0, { $0 + $1.width})
                 print(offsetX)
-                
-                //                 CGPoint(x: offsetX, y: 0)
                 anchors.append(CGPoint(x: offsetX, y: 0))
             }
+//            let cellInfos = Static.makeCellInfos()
+//            var anchors: [CGPoint] = []
+//            (0..<cellInfos.count).map {
+//                let offsetX = cellInfos.prefix($0).reduce(0, { $0 + $1.width })
+//                print(offsetX)
+//
+//                //                 CGPoint(x: offsetX, y: 0)
+//                anchors.append(CGPoint(x: offsetX, y: 0))
+//            }
             pagingView.anchors = anchors
         }
     }

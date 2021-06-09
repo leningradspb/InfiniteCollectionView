@@ -165,11 +165,11 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     }
 
     func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
-//        print(indexPath.row)
+        print(indexPath.row)
         guard !items.isEmpty else { return }
         willDisplayIndex = indexPath.row
         
-        let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
+       /* let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
         if count - 1 == index {
             count += items.count
             var indexPaths: [IndexPath] = []
@@ -181,7 +181,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
                 // [IndexPath(row: 3, section: 0), IndexPath(row: 4, section: 0), IndexPath(row: 5, section: 0)]
                 collectionView.insertItems(at: indexPaths)
             }
-        }
+        }*/
       
 //        if indexPath.row == count - 1 {
 //            count += items.count
@@ -194,7 +194,17 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //        print("scrollViewDidEndDecelerating", indexPathsForVisibleItems.first?.row)
         
 //        print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight)")
-  
+        guard count > items.count else { return }
+        var indexPaths: [IndexPath] = []
+        for i in 3...count - 1 {
+            print("i = \(i)")
+            indexPaths.append(IndexPath(row: i, section: 0))
+        }
+        count = items.count
+        performBatchUpdates {
+            // [IndexPath(row: 3, section: 0), IndexPath(row: 4, section: 0), IndexPath(row: 5, section: 0)]
+            deleteItems(at: indexPaths)
+        }
     }
     
     
@@ -213,5 +223,19 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //           count += items.count
 //            reloadData()
 //        }
+        
+        print("index = \(willDisplayIndex)")
+        if count - 1 == willDisplayIndex {
+            count += items.count
+            var indexPaths: [IndexPath] = []
+            for i in count - items.count...count - 1 {
+                print("i = \(i)")
+                indexPaths.append(IndexPath(row: i, section: 0))
+            }
+            performBatchUpdates {
+                // [IndexPath(row: 3, section: 0), IndexPath(row: 4, section: 0), IndexPath(row: 5, section: 0)]
+                insertItems(at: indexPaths)
+            }
+        }
     }
 }

@@ -111,19 +111,19 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         didEndDisplayingIndex < willDisplayIndex
     }
     
-    var cellSize: CGSize = .zero
-//    {
-//        didSet {
-//            pagingView.heightAnchor.constraint(equalToConstant: cellSize.height).isActive = true
-//        }
-//    }
+    var cellSize: CGSize = .zero {
+        didSet {
+            pagingView.heightAnchor.constraint(equalToConstant: cellSize.height).isActive = true
+        }
+    }
     
     private var count: Int = 0 {
         didSet {
             var cellInfos: [CGSize] = []
-            
+            var helper: CGFloat = 10
             for _ in 0...count - 1 {
-                cellInfos.append(CGSize(width: cellSize.width, height: cellSize.height))
+                
+                cellInfos.append(CGSize(width: cellSize.width + helper, height: cellSize.height))
             }
             
             for value in 0...count - 1 {
@@ -131,37 +131,12 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
                 print(offsetX)
                 anchors.append(CGPoint(x: offsetX, y: 0))
             }
-//            let cellInfos = Static.makeCellInfos()
-//            var anchors: [CGPoint] = []
-//            (0..<cellInfos.count).map {
-//                let offsetX = cellInfos.prefix($0).reduce(0, { $0 + $1.width })
-//                print(offsetX)
-//
-//                //                 CGPoint(x: offsetX, y: 0)
-//                anchors.append(CGPoint(x: offsetX, y: 0))
-//            }
+
             pagingView.anchors = anchors
         }
     }
     
     private var anchors: [CGPoint] = []
-//    {
-//        let cellInfos = Static.makeCellInfos()
-//        return (0..<cellInfos.count).map {
-//            let offsetX = cellInfos.prefix($0).reduce(0, { $0 + $1.width})
-//            print(offsetX)
-//            return CGPoint(x: offsetX, y: 0)
-//        }
-        
-        
-    
-        
-//        var anchors:[CGPoint] = []
-//        for value in 1...10 {
-//            anchors.append(CGPoint(x: cellSize.width * 2, y: 0))
-//        }
-//        return anchors
-//    }
     
     private struct Static {
         
@@ -178,23 +153,6 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         static let cellReuseIdentifier = "CVCell"
         
         static let cellColors: [UInt] = [0xB11F38, 0xE77A39, 0xEBD524, 0x4AA77A, 0x685B87]
-        
-//        static func makeCellInfos() -> [CGSize] {
-//            return (cellColors + cellColors + cellColors).map {
-//                let text = String(format: "%06X", $0)
-//                let size = CGSize(width: round(.random(in: minCellWidth...maxCellWidth)), height: cellHeight)
-//                return size
-//            }
-//        }
-        
-//        static func makeLayout() -> UICollectionViewFlowLayout {
-//            let layout = UICollectionViewFlowLayout()
-//            layout.minimumInteritemSpacing = cellSpacing
-//            layout.sectionInset = UIEdgeInsets(top: cellSpacing, left: cellSpacing, bottom: cellSpacing, right: cellSpacing)
-//            layout.scrollDirection = .horizontal
-//            return layout
-//        }
-
     }
     
     var items: [UIImage] = [] {
@@ -228,7 +186,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     private func setupLayout() {
         pagingView.backgroundColor = .green
         pagingView.translatesAutoresizingMaskIntoConstraints = false
-        pagingView.heightAnchor.constraint(equalToConstant: 210).isActive = true
+//        pagingView.heightAnchor.constraint(equalToConstant: 210).isActive = true
         pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true

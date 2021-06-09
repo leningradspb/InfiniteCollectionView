@@ -166,20 +166,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //        print(indexPath.row)
         guard !items.isEmpty else { return }
         willDisplayIndex = indexPath.row
-        if indexPath.row == items.count - 1 {
-            items += [UIImage(named: "0")!, UIImage(named: "1")!, UIImage(named: "2")!]
-            self.performBatchUpdates {
-//                print(items.count - itemsConst.count > itemsConst.count)
-//                if items.count - itemsConst.count > itemsConst.count {
-//                    print("more")
-//                    for index in 0...itemsConst.count - 1 {
-//                        self.items.remove(at: index)
-//                        self.deleteItems(at: [IndexPath(row: index, section: 0)])
-//                    }
-//                }
-                self.insertItems(at: [IndexPath(row: items.count - 1, section: 0), IndexPath(row: items.count - 2, section: 0), IndexPath(row: items.count - 3, section: 0)])
-            }
-        }
+      
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
@@ -195,11 +182,52 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
                     indexPaths.append(IndexPath(row: index, section: 0))
                 }
                 items = itemsConst
-                self.performBatchUpdates {
-                    self.deleteItems(at: indexPaths)
+                self.performBatchUpdates { [weak self] in
+                    self?.deleteItems(at: indexPaths)
                 }
+                return
             }
             
+            if isScrollingFromLeftTopRight {
+                
+//                var indexPaths:[IndexPath] = []
+//                for index in 0...(items.count - itemsConst.count) - 2 {
+//                    indexPaths.append(IndexPath(row: index, section: 0))
+//                    print("index = \(index), items = \(items.count)")
+//                    items.remove(at: index)
+//                }
+////                items = itemsConst
+//                self.performBatchUpdates { [weak self] in
+//                    self?.deleteItems(at: indexPaths)
+//                }
+                
+            } else {
+                
+            }
+            
+        }
+    }
+    
+    
+//    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
+//        print("scrollViewWillEndDragging")
+//    }
+    
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
+        if index == items.count - 1 {
+            items += [UIImage(named: "0")!, UIImage(named: "1")!, UIImage(named: "2")!]
+            self.performBatchUpdates { [weak self] in
+//                print(items.count - itemsConst.count > itemsConst.count)
+//                if items.count - itemsConst.count > itemsConst.count {
+//                    print("more")
+//                    for index in 0...itemsConst.count - 1 {
+//                        self.items.remove(at: index)
+//                        self.deleteItems(at: [IndexPath(row: index, section: 0)])
+//                    }
+//                }
+                self?.insertItems(at: [IndexPath(row: items.count - 1, section: 0), IndexPath(row: items.count - 2, section: 0), IndexPath(row: items.count - 3, section: 0)])
+            }
         }
     }
 }

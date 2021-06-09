@@ -27,7 +27,7 @@ class ViewController: UIViewController {
         collectionView.backgroundColor = .red
         
         collectionView.cellSize = CGSize(width: 200, height: 210)
-        collectionView.itemsConst = images
+        collectionView.items = images
 //        collectionView.reloadData()
 //        collectionView.delegate = self
 //        collectionView.dataSource = self
@@ -112,16 +112,14 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     
     var cellSize: CGSize = .zero
     
-    var itemsConst: [UIImage] = [] {
+    private var count: Int = 0
+    
+    var items: [UIImage] = [] {
         didSet {
-            items = itemsConst
+            count = items.count
             reloadData()
         }
     }
-    
-    private var count: Int = 9
-    
-    private var items: [UIImage] = []
     
     init() {
         let layout = UICollectionViewFlowLayout()
@@ -170,14 +168,32 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //        print(indexPath.row)
         guard !items.isEmpty else { return }
         willDisplayIndex = indexPath.row
+        
+        let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
+        if count - 1 == index {
+            count += items.count
+            var indexPaths: [IndexPath] = []
+            for i in count - items.count...count - 1 {
+                print("i = \(i)")
+                indexPaths.append(IndexPath(row: i, section: 0))
+            }
+            collectionView.performBatchUpdates {
+                // [IndexPath(row: 3, section: 0), IndexPath(row: 4, section: 0), IndexPath(row: 5, section: 0)]
+                collectionView.insertItems(at: indexPaths)
+            }
+        }
       
+//        if indexPath.row == count - 1 {
+//            count += items.count
+//            collectionView.reloadData()
+//        }
     }
     
     func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         // visibleCells.first
 //        print("scrollViewDidEndDecelerating", indexPathsForVisibleItems.first?.row)
         
-        print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight)")
+//        print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight)")
   
     }
     
@@ -187,20 +203,15 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //    }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
-       /* if index == items.count - 1 {
-            items += [UIImage(named: "0")!, UIImage(named: "1")!, UIImage(named: "2")!]
-            self.performBatchUpdates { [weak self] in
-//                print(items.count - itemsConst.count > itemsConst.count)
-//                if items.count - itemsConst.count > itemsConst.count {
-//                    print("more")
-//                    for index in 0...itemsConst.count - 1 {
-//                        self.items.remove(at: index)
-//                        self.deleteItems(at: [IndexPath(row: index, section: 0)])
-//                    }
-//                }
-                self?.insertItems(at: [IndexPath(row: items.count - 1, section: 0), IndexPath(row: items.count - 2, section: 0), IndexPath(row: items.count - 3, section: 0)])
-            }
-        }*/
+//        print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight), \(count)")
+//        let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
+//        if index % items.count == 0 {
+//            count += items.count
+//            reloadData()
+//        }
+//        if index == items.count - 1 {
+//           count += items.count
+//            reloadData()
+//        }
     }
 }

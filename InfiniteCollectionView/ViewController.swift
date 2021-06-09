@@ -129,7 +129,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         delegate = self
         dataSource = self
         register(CVCell.self, forCellWithReuseIdentifier: "CVCell")
-        contentInsetAdjustmentBehavior = .never
+//        contentInsetAdjustmentBehavior = .never
     }
     
 //    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
@@ -194,17 +194,18 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //        print("scrollViewDidEndDecelerating", indexPathsForVisibleItems.first?.row)
         
 //        print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight)")
-        guard count > items.count else { return }
-        var indexPaths: [IndexPath] = []
-        for i in 3...count - 1 {
-            print("i = \(i)")
-            indexPaths.append(IndexPath(row: i, section: 0))
-        }
-        count = items.count
-        performBatchUpdates {
-            // [IndexPath(row: 3, section: 0), IndexPath(row: 4, section: 0), IndexPath(row: 5, section: 0)]
-            deleteItems(at: indexPaths)
-        }
+//        guard count > items.count else { return }
+//        var indexPaths: [IndexPath] = []
+//        for i in 3...count - 1 {
+//            print("i = \(i)")
+//            indexPaths.append(IndexPath(row: i, section: 0))
+//        }
+//        count = items.count
+//        performBatchUpdates {
+//            // [IndexPath(row: 3, section: 0), IndexPath(row: 4, section: 0), IndexPath(row: 5, section: 0)]
+//            deleteItems(at: indexPaths)
+//            scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+//        }
     }
     
     
@@ -233,9 +234,74 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
                 indexPaths.append(IndexPath(row: i, section: 0))
             }
             performBatchUpdates {
-                // [IndexPath(row: 3, section: 0), IndexPath(row: 4, section: 0), IndexPath(row: 5, section: 0)]
                 insertItems(at: indexPaths)
             }
         }
     }
 }
+
+//fileprivate class SnapCenterLayout: UICollectionViewFlowLayout
+//{
+//    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint
+//    {
+//        guard let collectionView = collectionView else
+//        {
+//            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+//        }
+//        
+//        let parent = super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+//
+//        let itemSpace = (itemSize.width + minimumInteritemSpacing) * 3
+//        
+//        var currentItemIdx = round(collectionView.contentOffset.x / itemSpace)
+//
+//        // Skip to the next cell, if there is residual scrolling velocity left.
+//        // This helps to prevent glitches
+//        let vX = velocity.x
+//        
+//        if vX > 0
+//        {
+//            currentItemIdx += 1
+//        }
+//        else if vX < 0
+//        {
+//            currentItemIdx -= 1
+//        }
+//
+//        let nearestPageOffset = currentItemIdx * itemSpace
+//        
+//        return CGPoint(x: nearestPageOffset, y: parent.y)
+//    }
+//}
+//
+//class SnappingCollectionViewLayout: UICollectionViewFlowLayout
+//{
+//    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint
+//    {
+//        guard let collectionView = collectionView else
+//        {
+//            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
+//        }
+//
+//        var offsetAdjustment = CGFloat.greatestFiniteMagnitude
+//        let horizontalOffset = proposedContentOffset.x + collectionView.contentInset.left
+//
+//        let targetRect = CGRect(x: proposedContentOffset.x, y: 0, width: collectionView.bounds.size.width, height: collectionView.bounds.size.height)
+//
+//        let layoutAttributesArray = super.layoutAttributesForElements(in: targetRect)
+//
+//        layoutAttributesArray?.forEach
+//        {
+//            let itemOffset = $0.frame.origin.x
+//            let itemWidth = Float($0.frame.width)
+//            let direction: Float = velocity.x > 0 ? 1 : -1
+//            
+//            if fabsf(Float(itemOffset - horizontalOffset)) < fabsf(Float(offsetAdjustment)) + itemWidth * direction
+//            {
+//                offsetAdjustment = itemOffset - horizontalOffset
+//            }
+//        }
+//
+//        return CGPoint(x: proposedContentOffset.x + offsetAdjustment, y: proposedContentOffset.y)
+//    }
+//}

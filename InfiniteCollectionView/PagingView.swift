@@ -8,7 +8,7 @@
 import UIKit
 import pop
 // https://medium.com/yandex-maps-mobile/custom-paging-в-ios-c4dd4611e589
-
+// введено на случай, если нужно будет скроллить автоматически после ручного скролла
 protocol CurrentAnchorDelegate: AnyObject {
     func captured(anchor: CGPoint)
 }

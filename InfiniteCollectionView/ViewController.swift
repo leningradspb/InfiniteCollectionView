@@ -90,6 +90,9 @@ class CVCell: PagingCell {
 
 
 class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+    
+    var isAutoScroll = true
+    
     /// насколько поинтов видна скрытая (левая) ячейка. Её правая часть. Задавать значение до items!
     var cellOffset: CGFloat = 30
     
@@ -101,6 +104,9 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     
     var items: [AnyObject] = [] {
         didSet {
+            if itemsConst.isEmpty {
+                itemsConst = items
+            }
             count = items.count
             reloadData()
         }
@@ -109,6 +115,8 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
     private var pagingView: PagingView!
     private var didEndDisplayingIndex: Int = 0
     private var willDisplayIndex: Int = 0
+    private var timer: Timer?
+    private var itemsConst: [AnyObject] = []
     
     private var isScrollingFromLeftTopRight: Bool {
         didEndDisplayingIndex < willDisplayIndex
@@ -210,6 +218,34 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
                 self?.insertItems(at: indexPaths)
             }
         }
+    }
+    
+    func startAutoScroll() {
+        guard isAutoScroll else { return }
+        timer = Timer.scheduledTimer(timeInterval: 3.0, target: self, selector: #selector(fireTimer), userInfo: nil, repeats: true)
+    }
+    
+    func stopAutoScroll() {
+        timer?.invalidate()
+        
+        guard count != itemsConst.count else { return }
+        var indexPaths: [IndexPath] = []
+        for index in itemsConst.count..<count {
+            indexPaths.append(IndexPath(row: index, section: 0))
+        }
+        count = itemsConst.count
+        performBatchUpdates { [weak self] in
+            self?.deleteItems(at: indexPaths)
+        } completion: { [weak self] isComplete in
+            if isComplete {
+                self?.scrollToItem(at: IndexPath(row: 0, section: 0), at: .left, animated: false)
+            }
+        }
+    }
+    
+    @objc func fireTimer() {
+        print("Fire timer")
+        
     }
 }
 

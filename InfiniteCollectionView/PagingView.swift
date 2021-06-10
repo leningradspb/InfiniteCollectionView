@@ -9,6 +9,10 @@ import UIKit
 import pop
 // https://medium.com/yandex-maps-mobile/custom-paging-в-ios-c4dd4611e589
 
+protocol CurrentAnchorDelegate: AnyObject {
+    func captured(anchor: CGPoint)
+}
+
 final class PagingView: UIView {
     
     let contentView: UIScrollView
@@ -16,6 +20,8 @@ final class PagingView: UIView {
     var anchors: [CGPoint] = []
     
     var decelerationRate: CGFloat = UIScrollView.DecelerationRate.fast.rawValue
+    
+    weak var delegate: CurrentAnchorDelegate?
     
     /**
      @abstract The effective bounciness.
@@ -28,7 +34,7 @@ final class PagingView: UIView {
      @discussion Use in conjunction with 'springBounciness' to change animation effect. Values are converted into corresponding dynamics constants. Higher values increase the dampening power of the spring resulting in a faster initial velocity and more rapid bounce slowdown. Defined as a value in the range [0, 20]. Defaults to 12.
      */
     var springSpeed: CGFloat = 12
-    
+      
     init(contentView: UIScrollView) {
         self.contentView = contentView
         
@@ -52,6 +58,9 @@ final class PagingView: UIView {
         
         if let target = nearestAnchor(forContentOffset: offsetProjection) {
             snapAnimated(toContentOffset: target, velocity: velocity)
+            print("target.x = \(target)")
+            delegate?.captured(anchor: target)
+//            captureCurrentAnchor?(target.x)
         }
     }
     

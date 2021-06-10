@@ -132,7 +132,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
             pagingView.anchors = anchors
         }
     }
-    
+    /// точки, куда нужно скроллить
     private var anchors: [CGPoint] = []
   
     init() {
@@ -170,7 +170,6 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         let itemToShow = items[indexPath.row % items.count]
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PagingCell", for: indexPath) as! PagingCell
         cell.update(model: itemToShow)
-//        cell.update(image: itemToShow, index: indexPath.row)
         cell.backgroundColor = .cyan
         return cell
     }
@@ -216,7 +215,5 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 
 class PagingCell: UICollectionViewCell {
     /// override me
-    func update(model: AnyObject) {
-        
-    }
+    func update(model: AnyObject) {}
 }

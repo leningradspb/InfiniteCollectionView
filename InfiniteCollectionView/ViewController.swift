@@ -126,7 +126,6 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
             
             for value in 0...count - 1 {
                 let offsetX = cellInfos.prefix(value).reduce(0, { $0 + $1.width})
-                print(offsetX)
                 anchors.append(CGPoint(x: offsetX - cellOffset, y: 0))
             }
 
@@ -159,12 +158,9 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //        pagingView.heightAnchor.constraint(equalToConstant: 210).isActive = true
         pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
         pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-        pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-        pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         pagingView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         pagingView.anchors = anchors
     }
-    
 
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return count

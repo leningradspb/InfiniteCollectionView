@@ -32,11 +32,12 @@ class ViewController: UIViewController {
 }
 
 
-class CVCell: UICollectionViewCell {
+class CVCell: PagingCell {
     var avatar: UIImageView = UIImageView()
-    let label = UILabel()
+//    let label = UILabel()
     
-    func update(image: UIImage, index: Int) {
+    override func update(model: AnyObject) {
+        guard let image = model as? UIImage else {return}
         avatar.clipsToBounds = true
         avatar.image = image
         
@@ -49,23 +50,42 @@ class CVCell: UICollectionViewCell {
         let widthConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: contentView.bounds.width - 40)
         let heightConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 160)
         contentView.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
-        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
-        label.textColor = .white
-        label.text = "\(index)"
-        setupLabelConstaraints()
+//        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+//        label.textColor = .white
+//        label.text = "\(index)"
+//        setupLabelConstaraints()
     }
     
-    private func setupLabelConstaraints() {
-        contentView.addSubview(label)
-        
-        label.translatesAutoresizingMaskIntoConstraints = false
-        
-        let horizontalConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
-        let verticalConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
-        let widthConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: contentView.bounds.width - 40)
-        let heightConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 160)
-        contentView.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
-    }
+//    func update(image: UIImage, index: Int) {
+//        avatar.clipsToBounds = true
+//        avatar.image = image
+//
+//        contentView.addSubview(avatar)
+//
+//        avatar.translatesAutoresizingMaskIntoConstraints = false
+//
+//        let horizontalConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+//        let verticalConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+//        let widthConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: contentView.bounds.width - 40)
+//        let heightConstraint = NSLayoutConstraint(item: avatar, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 160)
+//        contentView.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+//        label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+//        label.textColor = .white
+//        label.text = "\(index)"
+//        setupLabelConstaraints()
+//    }
+    
+//    private func setupLabelConstaraints() {
+//        contentView.addSubview(label)
+//
+//        label.translatesAutoresizingMaskIntoConstraints = false
+//
+//        let horizontalConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.centerX, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerX, multiplier: 1, constant: 0)
+//        let verticalConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.centerY, relatedBy: NSLayoutConstraint.Relation.equal, toItem: contentView, attribute: NSLayoutConstraint.Attribute.centerY, multiplier: 1, constant: 0)
+//        let widthConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.width, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: contentView.bounds.width - 40)
+//        let heightConstraint = NSLayoutConstraint(item: label, attribute: NSLayoutConstraint.Attribute.height, relatedBy: NSLayoutConstraint.Relation.equal, toItem: nil, attribute: NSLayoutConstraint.Attribute.notAnAttribute, multiplier: 1, constant: 160)
+//        contentView.addConstraints([horizontalConstraint, verticalConstraint, widthConstraint, heightConstraint])
+//    }
 }
 
 
@@ -79,7 +99,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         }
     }
     
-    var items: [UIImage] = [] {
+    var items: [AnyObject] = [] {
         didSet {
             count = items.count
             reloadData()
@@ -123,7 +143,7 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         super.init(frame: .zero, collectionViewLayout: layout)
         delegate = self
         dataSource = self
-        register(CVCell.self, forCellWithReuseIdentifier: "CVCell")
+        register(CVCell.self, forCellWithReuseIdentifier: "PagingCell")
         pagingView = PagingView(contentView: self)
         setupLayout()
 //        contentInsetAdjustmentBehavior = .never
@@ -152,8 +172,9 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let itemToShow = items[indexPath.row % items.count]
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CVCell", for: indexPath) as! CVCell
-        cell.update(image: itemToShow, index: indexPath.row)
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PagingCell", for: indexPath) as! PagingCell
+        cell.update(model: itemToShow)
+//        cell.update(image: itemToShow, index: indexPath.row)
         cell.backgroundColor = .cyan
         return cell
     }
@@ -194,5 +215,12 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
                 self?.insertItems(at: indexPaths)
             }
         }
+    }
+}
+
+class PagingCell: UICollectionViewCell {
+    /// override me
+    func update(model: AnyObject) {
+        
     }
 }

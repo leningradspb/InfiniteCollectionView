@@ -7,7 +7,7 @@
 
 import UIKit
 import pop
-
+// https://medium.com/yandex-maps-mobile/custom-paging-в-ios-c4dd4611e589
 
 final class PagingView: UIView {
     

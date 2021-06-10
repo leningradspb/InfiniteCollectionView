@@ -103,56 +103,13 @@ class CVCell: UICollectionViewCell {
 
 
 class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
-    private var pagingView: PagingView!
-    private var didEndDisplayingIndex: Int = 0
-    private var willDisplayIndex: Int = 0
-    
-    private var isScrollingFromLeftTopRight: Bool {
-        didEndDisplayingIndex < willDisplayIndex
-    }
+    /// насколько поинтов видна скрытая (левая) ячейка. Её правая часть. Задавать значение до items!
+    var cellOffset: CGFloat = 30
     
     var cellSize: CGSize = .zero {
         didSet {
             pagingView.heightAnchor.constraint(equalToConstant: cellSize.height).isActive = true
         }
-    }
-    
-    private var count: Int = 0 {
-        didSet {
-            var cellInfos: [CGSize] = []
-            var helper: CGFloat = 10
-            for _ in 0...count - 1 {
-                
-                cellInfos.append(CGSize(width: cellSize.width + helper, height: cellSize.height))
-            }
-            
-            for value in 0...count - 1 {
-                let offsetX = cellInfos.prefix(value).reduce(0, { $0 + $1.width})
-                print(offsetX)
-                anchors.append(CGPoint(x: offsetX, y: 0))
-            }
-
-            pagingView.anchors = anchors
-        }
-    }
-    
-    private var anchors: [CGPoint] = []
-    
-    private struct Static {
-        
-        static let minCellWidth: CGFloat = 200
-        
-        static let maxCellWidth: CGFloat = 200
-        
-        static let cellHeight: CGFloat = 210
-        
-        static let cellSpacing: CGFloat = 4
-        
-        static let collectionHeight = cellHeight + 64
-        
-        static let cellReuseIdentifier = "CVCell"
-        
-        static let cellColors: [UInt] = [0xB11F38, 0xE77A39, 0xEBD524, 0x4AA77A, 0x685B87]
     }
     
     var items: [UIImage] = [] {
@@ -162,6 +119,36 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         }
     }
     
+    private var pagingView: PagingView!
+    private var didEndDisplayingIndex: Int = 0
+    private var willDisplayIndex: Int = 0
+    
+    private var isScrollingFromLeftTopRight: Bool {
+        didEndDisplayingIndex < willDisplayIndex
+    }
+    
+    private var count: Int = 0 {
+        didSet {
+            var cellInfos: [CGSize] = []
+            // без helper съезжает ячейка при каждом скролле
+            let helper: CGFloat = 10
+            for _ in 0...count - 1 {
+                
+                cellInfos.append(CGSize(width: cellSize.width + helper, height: cellSize.height))
+            }
+            
+            for value in 0...count - 1 {
+                let offsetX = cellInfos.prefix(value).reduce(0, { $0 + $1.width})
+                print(offsetX)
+                anchors.append(CGPoint(x: offsetX - cellOffset, y: 0))
+            }
+
+            pagingView.anchors = anchors
+        }
+    }
+    
+    private var anchors: [CGPoint] = []
+  
     init() {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
@@ -174,10 +161,6 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         setupLayout()
 //        contentInsetAdjustmentBehavior = .never
     }
-    
-//    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
-//        super.init(frame: frame, collectionViewLayout: layout)
-//    }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -193,13 +176,6 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
         pagingView.topAnchor.constraint(equalTo: topAnchor).isActive = true
         pagingView.anchors = anchors
-        
-//        print(pagingView.decelerationRate, pagingView.springBounciness, pagingView.springSpeed)
-//        pagingView.translatesAutoresizingMaskIntoConstraints = false
-//        pagingView.heightAnchor.constraint(equalToConstant: cellSize.height).isActive = true
-//        pagingView.leftAnchor.constraint(equalTo: leftAnchor).isActive = true
-//        pagingView.rightAnchor.constraint(equalTo: rightAnchor).isActive = true
-//        pagingView.topAnchor.constraint(equalTo: topAnchor).isActive = true
     }
     
 
@@ -278,11 +254,6 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
 //        }
     }
     
-    
-//    func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
-//        print("scrollViewWillEndDragging")
-//    }
-    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
 //        print("didEndDisplayingIndex = \(didEndDisplayingIndex) willDisplayIndex = \(willDisplayIndex), isScrollingFromLeftTopRight = \(isScrollingFromLeftTopRight), \(count)")
 //        let index = isScrollingFromLeftTopRight ? willDisplayIndex : didEndDisplayingIndex
@@ -309,69 +280,3 @@ class InfiniteCollectionView: UICollectionView, UICollectionViewDelegate, UIColl
         }
     }
 }
-
-//fileprivate class SnapCenterLayout: UICollectionViewFlowLayout
-//{
-//    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint
-//    {
-//        guard let collectionView = collectionView else
-//        {
-//            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
-//        }
-//        
-//        let parent = super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
-//
-//        let itemSpace = (itemSize.width + minimumInteritemSpacing) * 3
-//        
-//        var currentItemIdx = round(collectionView.contentOffset.x / itemSpace)
-//
-//        // Skip to the next cell, if there is residual scrolling velocity left.
-//        // This helps to prevent glitches
-//        let vX = velocity.x
-//        
-//        if vX > 0
-//        {
-//            currentItemIdx += 1
-//        }
-//        else if vX < 0
-//        {
-//            currentItemIdx -= 1
-//        }
-//
-//        let nearestPageOffset = currentItemIdx * itemSpace
-//        
-//        return CGPoint(x: nearestPageOffset, y: parent.y)
-//    }
-//}
-//
-//class SnappingCollectionViewLayout: UICollectionViewFlowLayout
-//{
-//    override func targetContentOffset(forProposedContentOffset proposedContentOffset: CGPoint, withScrollingVelocity velocity: CGPoint) -> CGPoint
-//    {
-//        guard let collectionView = collectionView else
-//        {
-//            return super.targetContentOffset(forProposedContentOffset: proposedContentOffset, withScrollingVelocity: velocity)
-//        }
-//
-//        var offsetAdjustment = CGFloat.greatestFiniteMagnitude
-//        let horizontalOffset = proposedContentOffset.x + collectionView.contentInset.left
-//
-//        let targetRect = CGRect(x: proposedContentOffset.x, y: 0, width: collectionView.bounds.size.width, height: collectionView.bounds.size.height)
-//
-//        let layoutAttributesArray = super.layoutAttributesForElements(in: targetRect)
-//
-//        layoutAttributesArray?.forEach
-//        {
-//            let itemOffset = $0.frame.origin.x
-//            let itemWidth = Float($0.frame.width)
-//            let direction: Float = velocity.x > 0 ? 1 : -1
-//            
-//            if fabsf(Float(itemOffset - horizontalOffset)) < fabsf(Float(offsetAdjustment)) + itemWidth * direction
-//            {
-//                offsetAdjustment = itemOffset - horizontalOffset
-//            }
-//        }
-//
-//        return CGPoint(x: proposedContentOffset.x + offsetAdjustment, y: proposedContentOffset.y)
-//    }
-//}
